@@ -5,6 +5,7 @@ package sapient_msg;
 import "sapient_msg/location.proto";
 import "sapient_msg/range_bearing.proto";
 import "sapient_msg/velocity.proto";
+import "sapient_msg/proto_options.proto";
 // [END declaration]
 
 // [START java_declaration]
@@ -15,17 +16,17 @@ option java_outer_classname = "RegistrationProto";
 
 // [START messages]
 message Registration {
-    repeated NodeDefinition node_definition = 1; // Type of the node
-    string icd_version = 2; // ICD version implemented by the node
+    repeated NodeDefinition node_definition = 1 [(field_options) = {is_mandatory: true}]; // Type of the node
+    optional string icd_version = 2 [(field_options) = {is_mandatory: true}]; // ICD version implemented by the node
     optional string name = 3; // System name
     optional string short_name = 4; // Shortened version of the system name suitable for GUIs
-    repeated Capability capabilities = 5; // Node's capabilities
-    StatusDefinition status_definition = 6; // Status report definition
-    repeated ModeDefinition mode_definition = 7; // Detection report and tasking definitons
+    repeated Capability capabilities = 5 [(field_options) = {is_mandatory: true}]; // Node's capabilities
+    optional StatusDefinition status_definition = 6 [(field_options) = {is_mandatory: true}]; // Status report definition
+    repeated ModeDefinition mode_definition = 7 [(field_options) = {is_mandatory: true}]; // Detection report and tasking definitons
 
     message NodeDefinition {
-        NodeType node_type = 1; // Description of major type of the node
-	repeated string node_sub_type  = 2; // further description of node type
+        optional NodeType node_type = 1 [(field_options) = {is_mandatory: true}]; // Description of major type of the node
+	    repeated string node_sub_type  = 2; // further description of node type
     }
 
     enum NodeType {
@@ -50,14 +51,14 @@ message Registration {
     }
 
     message Capability {
-        string category = 1; // The category of field to report (e.g. Radar, Jammer, etc.)
-        string type = 2; // Description of the capability (e.g. Maximum Transmit Power)
+        optional string category = 1 [(field_options) = {is_mandatory: true}]; // The category of field to report (e.g. Radar, Jammer, etc.)
+        optional string type = 2 [(field_options) = {is_mandatory: true}]; // Description of the capability (e.g. Maximum Transmit Power)
         optional string value = 3; // The value of the capability (e.g. 50)
         optional string units = 4; // The units of the value that will be reported (e.g. dB)
     }
 
     message StatusDefinition {
-        Duration status_interval = 1; // Time between heartbeats
+        optional Duration status_interval = 1 [(field_options) = {is_mandatory: true}]; // Time between heartbeats
         optional LocationType location_definition = 2; // Node location definition
         optional LocationType coverage_definition = 3; // Area covered by the ASM definition
         optional LocationType obscuration_definition = 4; // Area obsucred to ASM definition
@@ -79,22 +80,24 @@ message Registration {
 
     message Duration {
         reserved 2; // The type of the 'value' field was changed from int32 to float with the introduction of BSI Flex 335
-        TimeUnits units = 1; // Units that the duration are specified in
+        optional TimeUnits units = 1 [(field_options) = {is_mandatory: true}]; // Units that the duration are specified in
 //        int32 value = 2; // Amount of time being specified for the duration
-        float value = 3; // Amount of time being specified for the duration
+        optional float value = 3 [(field_options) = {is_mandatory: true}]; // Amount of time being specified for the duration
     }
 
     message ModeParameter {
-        string type = 1; // Type of parameter (e.g. SelfAdaptation)
-        string value = 2; // Allowed values of parameter (e.g. ROI, Range)
+        optional string type = 1 [(field_options) = {is_mandatory: true}]; // Type of parameter (e.g. SelfAdaptation)
+        optional string value = 2 [(field_options) = {is_mandatory: true}]; // Allowed values of parameter (e.g. ROI, Range)
     }
 
     message LocationType {
         oneof coordinates_oneof {
+            option (oneof_options) = {is_mandatory: true};
             LocationCoordinateSystem location_units = 1; // Units of location
             RangeBearingCoordinateSystem range_bearing_units = 2; // Units of range bearing
         };
         oneof datum_oneof {
+            option (oneof_options) = {is_mandatory: true};
             LocationDatum location_datum = 3; // Datum of location
             RangeBearingDatum range_bearing_datum = 4; // Datum of range bearing
         };
@@ -105,13 +108,15 @@ message Registration {
     message VelocityType {
         reserved 1, 2, 3, 5; // These values were used in SAPIENT upto version 7, but not in the current version
         oneof velocity_units_oneof {
+            option (oneof_options) = {is_mandatory: true};
 //            	GHCVelocityUnits ghc_velocity_units = 1; // Provide velocity in global coordinates in the style of Air Traffic Management and specify units - DEPRECIATED
-//		RYPVelocityUnits ryp_units = 2; // Provide velocity relative to sensor location and sensor pointing direction and specify units - DEPRECIATED
-//		RAEVelocityUnits rae_units = 3; // Provide velocity relative to sensor location and ground plane - DEPRECIATED
-		ENUVelocityUnits enu_velocity_units = 4; // Provide velocity as a vector in global spherical coordinates and specify units
-//		SHPVelocityUnits shp_velocity_units = 5; // Provide velocity as a vector in global spherical coordinates - DEPRECIATED
+//		        RYPVelocityUnits ryp_units = 2; // Provide velocity relative to sensor location and sensor pointing direction and specify units - DEPRECIATED
+//		        RAEVelocityUnits rae_units = 3; // Provide velocity relative to sensor location and ground plane - DEPRECIATED
+		        ENUVelocityUnits enu_velocity_units = 4; // Provide velocity as a vector in global spherical coordinates and specify units
+//		        SHPVelocityUnits shp_velocity_units = 5; // Provide velocity as a vector in global spherical coordinates - DEPRECIATED
         };
         oneof datum_oneof {
+            option (oneof_options) = {is_mandatory: true};
             LocationDatum location_datum = 6; // Datum of velocity in Cartesian coordinates
             RangeBearingDatum range_bearing_datum = 7; // Datum of velocity in Spherical coordinates
         };
@@ -119,8 +124,8 @@ message Registration {
     }
 
     message StatusReport {
-        StatusReportCategory category = 1; // Category of the field to report in the status report (e.g. sensor, power, mode, status, etc.)
-        string type = 2; // Type or name of the information being provide
+        optional StatusReportCategory category = 1 [(field_options) = {is_mandatory: true}]; // Category of the field to report in the status report (e.g. sensor, power, mode, status, etc.)
+        optional string type = 2 [(field_options) = {is_mandatory: true}]; // Type or name of the information being provide
         optional string units = 3; // Units or valid values that will be reported
         optional bool on_change = 4; // Is a new status report sent when a value changes
     }
@@ -134,17 +139,17 @@ message Registration {
     }
 
     message ModeDefinition {
-        string mode_name = 1; // Mode's name
-        ModeType mode_type = 2; // Mode's type
+        optional string mode_name = 1 [(field_options) = {is_mandatory: true}]; // Mode's name
+        optional ModeType mode_type = 2 [(field_options) = {is_mandatory: true}]; // Mode's type
         optional string mode_description = 3; // Description of the mode (normally used by GUIs)
-        Duration settle_time = 4; // Time required for the ASM to change to this mode
+        optional Duration settle_time = 4 [(field_options) = {is_mandatory: true}]; // Time required for the ASM to change to this mode
         optional Duration maximum_latency = 5; // Maximum expected latency from a detection being made by the sensor to a message being sent
         optional ScanType scan_type = 6; // Type of scan. Typically: fixed or scanning
         optional TrackingType tracking_type = 7; // Type of scan
         optional Duration duration = 8; // Time the mode lasts for in the case of temporary modes
         repeated ModeParameter mode_parameter = 9; // Additional parameters that can be passed to the mode during tasking
-        DetectionDefinition detection_definition = 10; // Definition of detection reports sent while in this mode
-        repeated TaskDefinition task = 11; // Definition of tasks that can be accepted by the ASM while in this mode
+        optional DetectionDefinition detection_definition = 10 [(field_options) = {is_mandatory: true}]; // Definition of detection reports sent while in this mode
+        repeated TaskDefinition task = 11 [(field_options) = {is_mandatory: true}]; // Definition of tasks that can be accepted by the ASM while in this mode
     }
 
     enum ModeType {
@@ -169,7 +174,7 @@ message Registration {
     }
 
     message DetectionDefinition {
-        LocationType location_type = 1; // Type of location that is reported in the detection report
+        optional LocationType location_type = 1 [(field_options) = {is_mandatory: true}]; // Type of location that is reported in the detection report
         repeated PerformanceValue detection_performance = 2; // detection performance definition
         repeated DetectionReport detection_report = 3; // Detection report defintion
         repeated DetectionClassDefinition detection_class_definition = 4; // Classes able to be reported in this detection report
@@ -179,23 +184,23 @@ message Registration {
     }
 
     message GeometricError {
-        string type = 1; // Type of the performance value being specified (e.g. Standard Deviation)
-        string units = 2; // Units of the performance value being specified (e.g. metres)
-        string variation_type = 3; // How the performance value being specified may vary during operation (e.g. Linear with Range)
+        optional string type = 1 [(field_options) = {is_mandatory: true}]; // Type of the performance value being specified (e.g. Standard Deviation)
+        optional string units = 2 [(field_options) = {is_mandatory: true}]; // Units of the performance value being specified (e.g. metres)
+        optional string variation_type = 3 [(field_options) = {is_mandatory: true}]; // How the performance value being specified may vary during operation (e.g. Linear with Range)
         repeated PerformanceValue performance_value = 4; // A list of types and values
     }
 
     message PerformanceValue {
-        string type = 1; // Type of the performance value being specified (e.g. Rotation speed)
-        string units = 2; // Units of the performance value being specified (e.g. Degrees per second)
-        string unit_value = 3; // Typical unit value of the performance value being specified (e.g. 2.5)
+        optional string type = 1 [(field_options) = {is_mandatory: true}]; // Type of the performance value being specified (e.g. Rotation speed)
+        optional string units = 2 [(field_options) = {is_mandatory: true}]; // Units of the performance value being specified (e.g. Degrees per second)
+        optional string unit_value = 3 [(field_options) = {is_mandatory: true}]; // Typical unit value of the performance value being specified (e.g. 2.5)
         optional string variation_type = 4; // How the performance value being specified may vary during operation (e.g. Linear)
     }
 
     message DetectionReport {
-        DetectionReportCategory category = 1; // Category of detection field being reported (e.g. object_info)
-        string type = 2; // Type of detection field being reported (e.g. colour)
-        string units = 3; // Units of detection field being reported (e.f. "Red, Green, Blue, Yellow...")
+        optional DetectionReportCategory category = 1 [(field_options) = {is_mandatory: true}]; // Category of detection field being reported (e.g. object_info)
+        optional string type = 2 [(field_options) = {is_mandatory: true}]; // Type of detection field being reported (e.g. colour)
+        optional string units = 3 [(field_options) = {is_mandatory: true}]; // Units of detection field being reported (e.f. "Red, Green, Blue, Yellow...")
         optional bool on_change = 4; // Is a new detection report sent when a value changes
     }
 
@@ -219,45 +224,45 @@ message Registration {
     }
 
     message ClassDefinition {
-        string type = 1; // Name of the classification that can be reported
+        optional string type = 1 [(field_options) = {is_mandatory: true}]; // Name of the classification that can be reported
         optional string units = 2; // The units of any reported confidence that the classification is correct (e.g. represented as a decimal (0-1))
         repeated SubClass sub_class = 3; // Any classes further down the taxonomy tree that can be reported
     }
 
     message SubClass {
-        string type = 1; // Name of the classification that can be reported
+        optional string type = 1 [(field_options) = {is_mandatory: true}]; // Name of the classification that can be reported
         optional string units = 2; // The units of any reported confidence that the classification is correct (e.g. represented as a decimal (0-1))
-        int32 level = 3; // The level of the sub-class. The top-level class would have a sub-level of: 0, the next: 1, etc.
+        optional int32 level = 3 [(field_options) = {is_mandatory: true}]; // The level of the sub-class. The top-level class would have a sub-level of: 0, the next: 1, etc.
         repeated SubClass sub_class = 4; // Any classes further down the taxonomy tree that can be reported
     }
 
     message BehaviourDefinition {
-        string type = 1; // Name of the behaviour that can be reported
+        optional string type = 1 [(field_options) = {is_mandatory: true}]; // Name of the behaviour that can be reported
         optional string units = 2; // The units of any reported confidence that the behaviour is correct (e.g. represented as a decimal (0-1))
     }
 
     message TaskDefinition {
         optional int32 concurrent_tasks = 1; // The number of instances of this task that can be run at the same time
-        RegionDefinition region_definition = 2; // Region definition for regions this task can operate on
+        optional RegionDefinition region_definition = 2 [(field_options) = {is_mandatory: true}]; // Region definition for regions this task can operate on
         repeated Command command = 3; // Commands that can be issued as part of this task
     }
 
     message ClassFilterDefinition {
         repeated FilterParameter filter_parameter = 1; // Parameter to be filtered on
         repeated SubClassFilterDefinition sub_class_definition = 2; // List of sub-class filters
-        string type = 3; // Classification name to be filtered on
+        optional string type = 3 [(field_options) = {is_mandatory: true}]; // Classification name to be filtered on
     }
 
     message SubClassFilterDefinition {
         repeated FilterParameter filter_parameter = 1; // Parameter to be filtered on
-        int32 level = 2; // Level of sub-class filter
-        string type = 3; // Classification name to be filtered on
+        optional int32 level = 2 [(field_options) = {is_mandatory: true}]; // Level of sub-class filter
+        optional string type = 3 [(field_options) = {is_mandatory: true}]; // Classification name to be filtered on
         repeated SubClassFilterDefinition sub_class_definition = 4; // List of sub-class filters
     }
 
     message FilterParameter {
-        string parameter = 1; // Parameter to be filtered
-        repeated Operator operators = 2; // Operaters to filter parameter on
+        optional string parameter = 1 [(field_options) = {is_mandatory: true}]; // Parameter to be filtered
+        repeated Operator operators = 2 [(field_options) = {is_mandatory: true}]; // Operaters to filter parameter on
     }
 
     enum Operator {
@@ -270,14 +275,14 @@ message Registration {
 
     message BehaviourFilterDefinition {
         repeated FilterParameter filter_parameter = 1; // Parameter to be filtered on
-        string type = 2; // Behvaiour name to be filtered on
+        optional string type = 2 [(field_options) = {is_mandatory: true}]; // Behvaiour name to be filtered on
     }
 
     message Command {
-        string name = 1; // Name of command
-        string units = 2; // Units or allowable values of the command
-        Duration completion_time = 3; // Time allowed to complete command
-        CommandType type = 4; // The type of command
+        optional string name = 1 [(field_options) = {is_mandatory: true}]; // Name of command
+        optional string units = 2 [(field_options) = {is_mandatory: true}]; // Units or allowable values of the command
+        optional Duration completion_time = 3 [(field_options) = {is_mandatory: true}]; // Time allowed to complete command
+        optional CommandType type = 4 [(field_options) = {is_mandatory: true}]; // The type of command
     }
 
     enum CommandType {
@@ -298,9 +303,9 @@ message Registration {
     }
 
     message RegionDefinition {
-        repeated RegionType region_type = 1; // Types of region
+        repeated RegionType region_type = 1 [(field_options) = {is_mandatory: true}]; // Types of region
         optional Duration settle_time = 2; // Time to settle to normal performance in this mode
-        repeated LocationType region_area = 3; // Location types used for the area that defines the region
+        repeated LocationType region_area = 3 [(field_options) = {is_mandatory: true}]; // Location types used for the area that defines the region
         repeated ClassFilterDefinition class_filter_definition = 4; // Filters that can be applied to the region for classes
         repeated BehaviourFilterDefinition behaviour_filter_definition = 5; // Filters that can be applied to the region for behaviours
     }

@@ -6,6 +6,7 @@ import "sapient_msg/associated_detection.proto";
 import "sapient_msg/associated_file.proto";
 import "sapient_msg/location.proto";
 import "sapient_msg/range_bearing.proto";
+import "sapient_msg/proto_options.proto";
 // [END declaration]
 
 // [START java_declaration]
@@ -17,7 +18,7 @@ option java_outer_classname = "AlertProto";
 
 // [START messages]
 message Alert {
-    string alert_id = 1; // ULID for the message
+    optional string alert_id = 1 [(field_options) = {is_mandatory: true, is_ulid: true}]; // ULID for the message
     optional AlertType alert_type = 2; // Type of alert message
     optional AlertStatus status = 3; // State of the information in this message
     optional string description = 4; // Description of the alert (normally displayed on a GUI)
@@ -25,7 +26,7 @@ message Alert {
         RangeBearing range_bearing = 5; // Location of the alert in Sphereical coordinates
         Location location = 6; // Location of the alert in Geo coordinates
     }
-    optional string region_id = 7; // ULID of the region the alert is from
+    optional string region_id = 7 [(field_options) = {is_ulid: true}]; // ULID of the region the alert is from
     optional DiscretePriority priority = 8; // Priority of the alert
     optional float ranking = 9; // 0-1
     optional float confidence = 10; // Confidence (0-1) that the alert is not a false-alarm

@@ -9,6 +9,7 @@ import "sapient_msg/associated_detection.proto";
 import "sapient_msg/location.proto";
 import "sapient_msg/range_bearing.proto";
 import "sapient_msg/velocity.proto";
+import "sapient_msg/proto_options.proto";
 // [END declaration]
 
 // [START java_declaration]
@@ -21,11 +22,12 @@ option java_outer_classname = "DetectionReportProto";
 // [START messages]
 message DetectionReport {
     reserved 17, 18, 20, 21; // These values were used in SAPIENT v7, but are not used in the current version
-    string report_id = 1; // ULID for the message
-    string object_id = 2; // ULID for the object detected in the environment
-    optional string task_id = 3; // ULID of the task the ASM is currently performing
+    optional string report_id = 1 [(field_options) = {is_mandatory: true, is_ulid: true}]; // ULID for the message
+    optional string object_id = 2 [(field_options) = {is_mandatory: true, is_ulid: true}]; // ULID for the object detected in the environment
+    optional string task_id = 3 [(field_options) = {is_ulid: true}]; // ULID of the task the ASM is currently performing
     optional string state = 4; // Whether a special case is in effect (e.g. object lost)
     oneof location_oneof {
+        option (oneof_options) = {is_mandatory: true};
         RangeBearing range_bearing = 5; // Location of object being detected using an range-bearing coordinate system
         Location location = 6; // Location of object being detected using an 'x-y-z' coordinate system
     }
@@ -58,41 +60,41 @@ message DetectionReport {
     }
     
     message TrackObjectInfo {
-        string type = 1; // The type of object_info being reported (e.g. colour)
-        string value = 2; // The value of the object_info being reported (e.g. red)
+        optional string type = 1 [(field_options) = {is_mandatory: true}]; // The type of object_info being reported (e.g. colour)
+        optional string value = 2 [(field_options) = {is_mandatory: true}]; // The value of the object_info being reported (e.g. red)
         optional float error = 3; // Any error associated with the object_info
     }
 
     message DetectionReportClassification {
-        string type = 1; // Classification of the detected object being reported
+        optional string type = 1 [(field_options) = {is_mandatory: true}]; // Classification of the detected object being reported
         optional float confidence = 2; // Confidence (0-1) that this is the correct classification of the detected object
         repeated SubClass sub_class = 3; // Any sub-classifications of the detected object
     }
 
     message SubClass {
-        string type = 1; // Classification of the detected object being reported
+        optional string type = 1 [(field_options) = {is_mandatory: true}]; // Classification of the detected object being reported
         optional float confidence = 2; // Confidence (0-1) that this is the correct classification of the detected object
-        int32 level = 3; // The level of sub-classification (top level is 0, the first sub-class is 1, etc.)
+        optional int32 level = 3 [(field_options) = {is_mandatory: true}]; // The level of sub-classification (top level is 0, the first sub-class is 1, etc.)
         repeated SubClass sub_class = 4; // Any sub-classifications of the detected object
     }
 
     message Behaviour {
-        string type = 1; // Behviouar of the detected object being reported
+        optional string type = 1 [(field_options) = {is_mandatory: true}]; // Behviouar of the detected object being reported
         optional float confidence = 2; // Confidence (0-1) that this is the correct behvaiour of the detected object
     }
 
     message Signal {
-        float amplitude = 1; // Peak amplitude of the signal being reported
+        optional float amplitude = 1 [(field_options) = {is_mandatory: true}]; // Peak amplitude of the signal being reported
         optional float start_frequency = 2; // Lowest frequency of the band being reported
-        float centre_frequency = 3; // Centre frequency of the band being reported
+        optional float centre_frequency = 3 [(field_options) = {is_mandatory: true}]; // Centre frequency of the band being reported
         optional float stop_frequency = 4; // Highest frequency of the band being reported
         optional float pulse_duration = 5; // Pulse duration of the signal being reported
     }
 
     message DerivedDetection {
         optional google.protobuf.Timestamp timestamp = 1; // UTC timestamp the message was sent
-        string node_id = 2; // UUID for the node where the assoicated detection has originiated
-        string object_id = 3; // ULID for the object detected in the environment
+        optional string node_id = 2 [(field_options) = {is_mandatory: true, is_uuid: true}]; // UUID for the node where the assoicated detection has originiated
+        optional string object_id = 3 [(field_options) = {is_mandatory: true, is_ulid: true}]; // ULID for the object detected in the environment
     }
 }
 // [END messages]

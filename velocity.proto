@@ -2,6 +2,7 @@
 syntax = "proto3";
 package sapient_msg;
 
+import "sapient_msg/proto_options.proto";
 // [END declaration]
 
 // [START java_declaration]
@@ -17,8 +18,8 @@ option java_outer_classname = "SAPIENTCommon";
 // This is a revision of the TIE22 LocationVelocity encoding velocity as per the Location field but with eastings, northings and up for clarity.
 // This aligns with the Location (Cartesian) coordinates system. 
 message ENUVelocity {
-    double east_rate = 1; // Velocity in the east-axis (x)
-    double north_rate = 2; // Velocity in the north-axis (y)
+    optional double east_rate = 1 [(field_options) = {is_mandatory: true}]; // Velocity in the east-axis (x)
+    optional double north_rate = 2 [(field_options) = {is_mandatory: true}]; // Velocity in the north-axis (y)
     optional double up_rate = 3; // Velocity in the up-axis (z)
     optional double east_rate_error = 4;  // Error in the velocity in the east-axis
     optional double north_rate_error = 5; // Error in the velocity in the north-axis
@@ -27,7 +28,7 @@ message ENUVelocity {
 
 // Specify units when ENUVelocity is in use
 message ENUVelocityUnits {
-    SpeedUnits east_north_rate_units = 1; // Units that velocity is reported in for east and north axis
+    optional SpeedUnits east_north_rate_units = 1 [(field_options) = {is_mandatory: true}]; // Units that velocity is reported in for east and north axis
     optional SpeedUnits up_rate_units = 2; // Units that velocity is reported in for up axis
 }
 

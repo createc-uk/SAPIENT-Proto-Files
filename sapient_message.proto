@@ -25,17 +25,18 @@ option java_outer_classname = "SapientMessageProto";
 
 // [START options]
 option (file_options) = {
-  standard_version: "BSI_Flex_335_v1.0"
+  standard_version: "ICD7.0"
 };
 // [END options]
 
 
 // [START messages]
 message SapientMessage {
-    google.protobuf.Timestamp timestamp = 1; // UTC timestamp the message was sent
-    string node_id = 2; // UUID for the node which is sending the message
-    optional string destination_id = 3; // UUID for the node being tasked
+  optional google.protobuf.Timestamp timestamp = 1 [(field_options) = {is_mandatory: true}]; // UTC timestamp the message was sent
+    optional string node_id = 2 [(field_options) = {is_mandatory: true, is_uuid: true}]; // UUID for the node which is sending the message
+    optional string destination_id = 3 [(field_options) = {is_uuid: true}]; // UUID for the node being tasked
     oneof content {
+        option (oneof_options) = {is_mandatory: true};
         Registration registration = 4; // SAPIENT Registration message
         RegistrationAck registration_ack = 5; // SAPIENT Registration Acknowledgement message
         StatusReport status_report = 6; // SAPIENT Status Report message

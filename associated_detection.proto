@@ -3,6 +3,7 @@ syntax = "proto3";
 package sapient_msg;
 
 import "google/protobuf/timestamp.proto";
+import "sapient_msg/proto_options.proto";
 // [END declaration]
 
 // [START java_declaration]
@@ -14,8 +15,8 @@ option java_outer_classname = "AssociatedDetectionProto";
 // [START messages]
 message AssociatedDetection {
     optional google.protobuf.Timestamp timestamp = 1; // UTC timestamp the message was sent
-    string node_id = 2; // ULID for the node where the assoicated detection has originiated
-    string object_id = 3; // ULID for the object detected in the environment
+    optional string node_id = 2 [(field_options) = {is_mandatory: true, is_uuid: true}]; // ULID for the node where the assoicated detection has originiated
+    optional string object_id = 3 [(field_options) = {is_mandatory: true, is_ulid: true}]; // ULID for the object detected in the environment
     optional AssociationRelation association_type = 4; // Relationship of associated detection to this message
 }
 

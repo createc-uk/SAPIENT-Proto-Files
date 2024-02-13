@@ -2,6 +2,7 @@
 syntax = "proto3";
 package sapient_msg;
 
+import "sapient_msg/proto_options.proto";
 // [END declaration]
 
 // [START java_declaration]
@@ -12,7 +13,7 @@ option java_outer_classname = "AssociatedFileProto";
 
 // [START messages]
 message AssociatedFile {
-    string type = 1; // Type of file contained available at the URL
-    string url = 2; // The network address of where the file can be accessed
+    optional string type = 1 [(field_options) = {is_mandatory: true}]; // Type of file contained available at the URL
+    optional string url = 2 [(field_options) = {is_mandatory: true}]; // The network address of where the file can be accessed
 }
 // [END messages]

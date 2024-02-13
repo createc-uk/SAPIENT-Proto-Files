@@ -1,6 +1,8 @@
 // [START declaration]
 syntax = "proto3";
 package sapient_msg;
+
+import "sapient_msg/proto_options.proto";
 // [END declaration]
 
 // [START java_declaration]
@@ -12,8 +14,8 @@ option java_outer_classname = "AlertAckProto";
 
 // [START messages]
 message AlertAck {
-    string alert_id = 1; // ULID for the message
-    AlertStatus alert_status = 2; // State of the information in this message
+    optional string alert_id = 1 [(field_options) = {is_mandatory: true, is_ulid: true}]; // ULID for the message
+    optional AlertStatus alert_status = 2 [(field_options) = {is_mandatory: true}]; // State of the information in this message
     optional string reason = 3; // Reason why alert was not accepted
   
     enum AlertStatus {

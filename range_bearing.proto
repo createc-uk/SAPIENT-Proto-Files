@@ -1,6 +1,8 @@
 // [START declaration]
 syntax = "proto3";
 package sapient_msg;
+
+import "sapient_msg/proto_options.proto";
 // [END declaration]
 
 // [START java_declaration]
@@ -17,8 +19,8 @@ message RangeBearing {
     optional double elevation_error = 4; // Elevation error
     optional double azimuth_error = 5; // Azimuth error
     optional double range_error = 6; // Range Error
-    RangeBearingCoordinateSystem coordinate_system = 7; // Units used by the range bearing
-    RangeBearingDatum datum = 8; // Datum or 'north' used by the range bearing
+    optional RangeBearingCoordinateSystem coordinate_system = 7 [(field_options) = {is_mandatory: true}]; // Units used by the range bearing
+    optional RangeBearingDatum datum = 8 [(field_options) = {is_mandatory: true}]; // Datum or 'north' used by the range bearing
 }
 
 message RangeBearingCone {
@@ -32,8 +34,8 @@ message RangeBearingCone {
     optional double elevation_error = 8; // Elevation error
     optional double azimuth_error = 9; // Azimuth error
     optional double range_error = 10; // Range Error
-    RangeBearingCoordinateSystem coordinate_system = 11; // Units used by the range bearing
-    RangeBearingDatum datum = 12; // Datum or 'north' used by the range bearing
+    optional RangeBearingCoordinateSystem coordinate_system = 11 [(field_options) = {is_mandatory: true}]; // Units used by the range bearing
+    optional RangeBearingDatum datum = 12 [(field_options) = {is_mandatory: true}]; // Datum or 'north' used by the range bearing
 }
 
 enum RangeBearingCoordinateSystem {
