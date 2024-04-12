@@ -1,4 +1,4 @@
-# BSI Flex 355
+# BSI Flex 335
 BSI Flex 335 specifies the interfaces within a SAPIENT (Sensing for Asset Protection with Integrated Electronic Networked Technology) system.  Specifically, it addresses the interfaces between edge nodes, the fusion node and any message handling application.  
 
 This repository provides protobuf aligned to the interfaces defined in BSI Flex 335
